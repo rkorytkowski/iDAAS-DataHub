@@ -1,7 +1,7 @@
 # iDAAS-Data-DataHub
 iDAAS Data platform for viewing, managing and eventually replaying data
 
-#Supported RDBMS
+# Supported RDBMS
 Within the src/datatier you will see that we have support for Postgres, MariaDB and SQL Server.
 Currently, we have focused on building out the capabilities within SQL Server. There are several free SQL 
 Server options.
