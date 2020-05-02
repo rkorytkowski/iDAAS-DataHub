@@ -1,5 +1,10 @@
 # iDAAS-Data-DataHub
-iDAAS Data platform for viewing, managing and eventually replaying data
+iDAAS Data platform for viewing, managing and eventually replaying data.
+
+# DDLs - Data Defintions
+This repository is ONLY put in place to share updates to the various databases we support and the DDLs to seed the database structures and dataloaders to pre-seed the databases with reference data.
+
+DDL files can be located in the /src directory and each supported RDBMS has a sub-directory within it
 
 # Supported RDBMS
 Within the src/datatier you will see that we have support for Postgres, MariaDB and SQL Server.
