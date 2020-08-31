@@ -5,7 +5,7 @@
   
   <groupId>com.redhat.idaas.datahub</groupId>
   <artifactId>idaas-data-hub</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
+  <version>2020-09</version>
   
   <name>iDAAS Data Hub</name>
   

@@ -9,5 +9,5 @@ echo "Maven Build Completed"
 /usr/local/bin/mvn package
 echo "Maven Release Completed"
 cd target
-cp idaas-connect-*.jar idaas-connect-hl7.jar
+cp idaas-*.jar idaas-connect-hl7.jar
 echo "Copied Release Specific Version to General version"
