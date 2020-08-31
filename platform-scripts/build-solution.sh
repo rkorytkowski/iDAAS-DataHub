@@ -1,6 +1,6 @@
 # Change Directory to solution on local machine
 echo $PWD
-echo "iDAAS - Connect HL7"
+echo "iDAAS - Data Hub"
 cd $PWD
 cd ../
 
