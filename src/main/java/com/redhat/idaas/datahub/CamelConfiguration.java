@@ -1,7 +1,9 @@
 package com.redhat.idaas.datahub;
 
+import org.apache.camel.Exchange;
 import org.apache.camel.ExchangePattern;
 import org.apache.camel.LoggingLevel;
+import org.apache.camel.Processor;
 import org.apache.camel.builder.RouteBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,26 +29,22 @@ public class CamelConfiguration extends RouteBuilder {
     return kafka;
   }
 
+  //https://camel.apache.org/manual/latest/processor.html
+
+  public abstract class MyProcessor implements Processor {
+    public void process(Exchange exchange) throws Exception {
+      String payload = exchange.getIn().getBody(String.class);
+      // do something with the payload and/or exchange here
+      //exchange.getIn().setBody("Changed body");
+      exchange.getIn().getHeaders();
+      // Java.Util.Map Code
+
+    }
+  }
   @Override
   public void configure() throws Exception {
-
-    from("kafka:opsMgmt_HL7_RcvdTrans?brokers=localhost:9092")
-      .routeId("HL7MessageProcess-DataHub")
-      .setBody(body())
-      // Enterprise Message By Sending App By Type
-      //to("kafka:MMS_MFN?brokers=localhost:9092")
-      // Ensure iDAAS Data can track processing
-      .to("kafka:opsMgmt_ProcessedTransactions?brokers=localhost:9092")
-    ;
-    // FHIR Transactions
-    from("kafka:opsMgmt_FHIR_RcvdTrans?brokers=localhost:9092")
-      .routeId("FHIRMessageProcess-DataHub")
-      .setBody(body())
-      // Enterprise Message By Sending App By Type
-      //to("kafka:MMS_MFN?brokers=localhost:9092")
-      // Ensure iDAAS Data can track processing
-      .to("kafka:opsMgmt_ProcessedTransactions?brokers=localhost:9092")
-    ;
+    // OpsMgmt_Transactions
+    from("kafka:localhost:9092?topic=opsmgmt_transactions&brokers=localhost:9092").process("MyProcessor");
   }
-}
 
+}
