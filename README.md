@@ -29,11 +29,57 @@ is processing all the data from the topic named opmgmt_transactions.
 This section will cover both local and automated builds.
 
 ### Local Builds
-Within the code base you can find the local build commands in the /platform-scripts directory
+Within the code base you can find the local build commands in the platform-scripts directory
 1.  Run the build-solution.sh script
 It will run the maven commands to build and then package up the solution. The package will use the usual settings
-in the pom.xml file. It pulls the version and concatenates the version to the output jar it builds.
-Additionally, there is a copy statement to remove any specific version, so it outputs idaas-connect-hl7.jar
+in the pom.xml file. It outputs target/idaas-datahub.jar
+
+### Running
+Once built you can run the solution by executing `./platform-scripts/start-solution.sh`. 
+The script will startup Kafka and iDAAS DataHub Service.
+
+Alternatively, if you have a running instance of Kafka, you can start a solution with:
+`./platform-scripts/start-solution-with-external-kafka.sh --idaas.kafkaBrokers=host1:port1,host2:port2`.
+The script will startup iDAAS DataHub Service.
+
+It is possible to overwrite configuration by:
+1. Providing parameters via command line e.g.
+`./start-solution.sh --idaas.auditDir=some/other/audit/dir`
+2. Creating an application.properties next to the idaas-datahub.jar in the target directory
+3. Creating a properties file in a custom location `./start-solution.sh --spring.config.location=file:./config/application.properties`
+
+Supported properties include:
+```properties
+idaas.kafkaBrokers=localhost:9092 #a comma separated list of kafka brokers e.g. host1:port1,host2:port2
+idaas.auditDir=audit
+server.port=8080
+```
+
+### Usage
+
+The service listens for Kafka messages on the `opsmgmt_transactions` queue and outputs them to auditDir as json files.
+
+The output includes both message and headers.
+
+There's also an endpoint available for putting messages on the queue. The REST service runs on port 8080 by default, but
+it can be customized by providing `--server.port=8082` parameter.
+ 
+You can POST a message like this:
+```shell script
+curl -X POST \
+  http://localhost:8080/message \
+  -H 'content-type: application/json' \
+  -d '{
+	"message": "test",
+	"headers": {
+		"processingtype": "data",
+		"appname": "iDAAS-ConnectClinical-IndustryStd",
+		"industrystd": "HL7",
+		"messagetrigger": "ADT"
+	}
+}'
+```
+
 
 ### Automated Builds
 Automated Builds are going to be done in Azure Pipelines

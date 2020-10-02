@@ -18,16 +18,21 @@ package com.redhat.idaas.datahub;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.boot.system.ApplicationPidFileWriter;
 
 /**
  * A spring-boot application that includes a Camel route builder to setup the Camel routes
  */
 @SpringBootApplication
+@EnableConfigurationProperties(ConfigProperties.class)
 public class Application {
 
     // must have a main method spring-boot can run
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication app = new SpringApplication(Application.class);
+        app.addListeners(new ApplicationPidFileWriter("./bin/shutdown.pid"));
+        app.run(args);
     }
 
 }
