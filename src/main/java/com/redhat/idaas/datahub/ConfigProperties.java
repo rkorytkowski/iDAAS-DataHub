@@ -20,9 +20,10 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "idaas")
 public class ConfigProperties {
 
-    private String kafkaBrokers = "localhost:9092";
-
-    private String auditDir = "audit";
+    //private String kafkaBrokers = "localhost:9092";
+    private String kafkaBrokers;
+    //private String auditDir = "audit";
+    private String auditDir;
 
     public String getKafkaBrokers() {
         return kafkaBrokers;

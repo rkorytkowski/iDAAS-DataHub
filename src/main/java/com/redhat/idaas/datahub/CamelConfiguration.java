@@ -45,11 +45,26 @@ public class CamelConfiguration extends RouteBuilder {
     return kafka;
   }
 
+  private String getKafkaTopicUri(String topic) {
+    String kafkaURI;
+    String topicName ="opsmgmt_platformtransactions";
+    kafkaURI = "kafka:" + topicName +
+            "?brokers=" +
+            config.getKafkaBrokers();
+    return kafkaURI;
+  }
+
   @Override
   public void configure() {
     // OpsMgmt_Transactions
-    from("kafka:opsmgmt_transactions?brokers=" + config.getKafkaBrokers()).removeHeader("breadcrumbId").convertBodyTo(String.class)
-            .process("auditProcessor").marshal().json(JsonLibrary.Jackson).to("file:" + config.getAuditDir());
+    //from("kafka:opsmgmt_transactions?brokers=" + config.getKafkaBrokers()).removeHeader("breadcrumbId").convertBodyTo(String.class)
+    //        .process("auditProcessor").marshal().json(JsonLibrary.Jackson)
+    //        .to("file:" + config.getAuditDir());
+    from(getKafkaTopicUri("opsmgmt_platformtransactions"))
+        .removeHeader("breadcrumbId").convertBodyTo(String.class)
+        .process("auditProcessor").marshal().json(JsonLibrary.Jackson)
+        .to("file:" + config.getAuditDir());
+    ;
   }
 
 }
