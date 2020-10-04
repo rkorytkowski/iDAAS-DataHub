@@ -40,6 +40,6 @@ public class AuditController {
             kafkaHeaders.put(header.getKey(), header.getValue());
         }
 
-        producer.sendMessageWithHeaders(message.getMessage(), kafkaHeaders);
+        producer.sendMessageWithHeaders(message.getAuditEntireMessage(), kafkaHeaders);
     }
 }

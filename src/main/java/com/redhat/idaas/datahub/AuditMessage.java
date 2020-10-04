@@ -19,16 +19,26 @@ import java.util.Map;
 
 public class AuditMessage {
 
-    private String message;
+    private String auditEntireMessage;
+    private String messageprocesseddate;
+    private String messageprocessedtime;
+    private String processingtype;
+    private String industrystd;
+    private String component;
+    private String messagetrigger;
+    private String processname;
+    private String auditdetails;
+    private String camelID;
+    private String exchangeID;
+    private String internalMsgID;
+    private String bodyData;
+
     private Map<String, String> headers;
-
-    public String getMessage() {
-        return message;
+    public String getAuditEntireMessage() {
+        return auditEntireMessage;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
-    }
+    public void setAuditEntireMessage(String auditEntireMessage) { this.auditEntireMessage = auditEntireMessage;}
 
     public Map<String, String> getHeaders() {
         return headers;
