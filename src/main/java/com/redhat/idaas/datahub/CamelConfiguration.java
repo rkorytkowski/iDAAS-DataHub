@@ -16,6 +16,7 @@
 package com.redhat.idaas.datahub;
 
 import org.apache.camel.builder.RouteBuilder;
+import org.apache.camel.model.RouteDefinition;
 import org.apache.camel.model.dataformat.JsonLibrary;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,26 +46,26 @@ public class CamelConfiguration extends RouteBuilder {
     return kafka;
   }
 
-  private String getKafkaTopicUri(String topic) {
-    String kafkaURI;
-    String topicName ="opsmgmt_platformtransactions";
-    kafkaURI = "kafka:" + topicName +
-            "?brokers=" +
-            config.getKafkaBrokers();
-    return kafkaURI;
-  }
-
   @Override
   public void configure() {
-    // OpsMgmt_Transactions
-    //from("kafka:opsmgmt_transactions?brokers=" + config.getKafkaBrokers()).removeHeader("breadcrumbId").convertBodyTo(String.class)
-    //        .process("auditProcessor").marshal().json(JsonLibrary.Jackson)
-    //        .to("file:" + config.getAuditDir());
-    from(getKafkaTopicUri("opsmgmt_platformtransactions"))
-        .removeHeader("breadcrumbId").convertBodyTo(String.class)
-        .process("auditProcessor").marshal().json(JsonLibrary.Jackson)
-        .to("file:" + config.getAuditDir());
-    ;
+    RouteDefinition route = from(config.getKafkaTopicUri())
+            .removeHeader("breadcrumbId").convertBodyTo(String.class)
+            .process("auditProcessor");
+
+    if (config.isStoreInDb()) {
+      route.multicast().parallelProcessing().to("direct:file", "direct:db");
+
+      String columns = String.join(",", AuditMessage.DB_PERSISTABLE_FIELDS);
+      String values = "'${body." + String.join("}', '${body.", AuditMessage.DB_PERSISTABLE_FIELDS) + "}'";
+
+      from("direct:db").setBody(simple("INSERT INTO " + config.getDbTableName() + " (" + columns + ") VALUES (" + values + ")"))
+              .to("jdbc:dataSource");
+    } else {
+      route.to("direct:file");
+    }
+
+    from("direct:file").marshal().json(JsonLibrary.Jackson)
+            .to("file:" + config.getAuditDir());
   }
 
 }

@@ -15,9 +15,11 @@
  */
 package com.redhat.idaas.datahub;
 
-import java.util.Map;
-
 public class AuditMessage {
+
+    public static final String[] DB_PERSISTABLE_FIELDS = new String[] {"auditEntireMessage", "messageprocesseddate",
+            "messageprocessedtime", "processingtype", "industrystd", "component", "messagetrigger", "processname",
+    "auditdetails", "camelID", "exchangeID", "internalMsgID", "bodyData"};
 
     private String auditEntireMessage;
     private String messageprocesseddate;
@@ -33,18 +35,107 @@ public class AuditMessage {
     private String internalMsgID;
     private String bodyData;
 
-    private Map<String, String> headers;
     public String getAuditEntireMessage() {
         return auditEntireMessage;
     }
 
     public void setAuditEntireMessage(String auditEntireMessage) { this.auditEntireMessage = auditEntireMessage;}
 
-    public Map<String, String> getHeaders() {
-        return headers;
+    public String getMessageprocesseddate() {
+        return messageprocesseddate;
     }
 
-    public void setHeaders(Map<String, String> headers) {
-        this.headers = headers;
+    public void setMessageprocesseddate(String messageprocesseddate) {
+        this.messageprocesseddate = messageprocesseddate;
     }
+
+    public String getMessageprocessedtime() {
+        return messageprocessedtime;
+    }
+
+    public void setMessageprocessedtime(String messageprocessedtime) {
+        this.messageprocessedtime = messageprocessedtime;
+    }
+
+    public String getProcessingtype() {
+        return processingtype;
+    }
+
+    public void setProcessingtype(String processingtype) {
+        this.processingtype = processingtype;
+    }
+
+    public String getIndustrystd() {
+        return industrystd;
+    }
+
+    public void setIndustrystd(String industrystd) {
+        this.industrystd = industrystd;
+    }
+
+    public String getComponent() {
+        return component;
+    }
+
+    public void setComponent(String component) {
+        this.component = component;
+    }
+
+    public String getMessagetrigger() {
+        return messagetrigger;
+    }
+
+    public void setMessagetrigger(String messagetrigger) {
+        this.messagetrigger = messagetrigger;
+    }
+
+    public String getProcessname() {
+        return processname;
+    }
+
+    public void setProcessname(String processname) {
+        this.processname = processname;
+    }
+
+    public String getAuditdetails() {
+        return auditdetails;
+    }
+
+    public void setAuditdetails(String auditdetails) {
+        this.auditdetails = auditdetails;
+    }
+
+    public String getCamelID() {
+        return camelID;
+    }
+
+    public void setCamelID(String camelID) {
+        this.camelID = camelID;
+    }
+
+    public String getExchangeID() {
+        return exchangeID;
+    }
+
+    public void setExchangeID(String exchangeID) {
+        this.exchangeID = exchangeID;
+    }
+
+    public String getInternalMsgID() {
+        return internalMsgID;
+    }
+
+    public void setInternalMsgID(String internalMsgID) {
+        this.internalMsgID = internalMsgID;
+    }
+
+    public String getBodyData() {
+        return bodyData;
+    }
+
+    public void setBodyData(String bodyData) {
+        this.bodyData = bodyData;
+    }
+
+
 }

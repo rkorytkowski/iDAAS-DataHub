@@ -22,7 +22,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.Charset;
-import java.util.HashMap;
 import java.util.Map;
 
 @Component
@@ -34,15 +33,33 @@ public class AuditProcessor implements Processor {
     public void process(Exchange exchange) {
         AuditMessage message = new AuditMessage();
         message.setAuditEntireMessage((String) exchange.getIn().getBody());
-        message.setHeaders(new HashMap<>());
 
         Map<String, Object> headers = exchange.getIn().getHeaders();
-        for (Map.Entry<String, Object> header : headers.entrySet()) {
-            if (header.getValue() instanceof byte[]) {
-                message.getHeaders().put(header.getKey(), new String((byte[]) header.getValue(), Charset.defaultCharset()));
-            }
-        }
+
+        message.setMessageprocesseddate(getHeader(headers, "messageprocesseddate"));
+        message.setAuditdetails(getHeader(headers, "auditdetails"));
+        message.setBodyData(getHeader(headers, "bodyData"));
+        message.setCamelID(getHeader(headers, "camelID"));
+        message.setComponent(getHeader(headers, "component"));
+        message.setExchangeID(getHeader(headers, "exchangeID"));
+        message.setIndustrystd(getHeader(headers, "industrystd"));
+        message.setInternalMsgID(getHeader(headers, "internalMsgID"));
+        message.setMessageprocessedtime(getHeader(headers, "messageprocessedtime"));
+        message.setMessagetrigger(getHeader(headers, "messagetrigger"));
+        message.setProcessingtype(getHeader(headers, "processingtype"));
+        message.setProcessname(getHeader(headers, "processname"));
 
         exchange.getOut().setBody(message);
+    }
+
+    private String getHeader(Map<String, Object> headers, String name) {
+        Object objectValue = headers.get(name);
+        if (objectValue instanceof byte[]) {
+            return new String((byte[]) objectValue, Charset.defaultCharset());
+        } else if (objectValue instanceof String){
+            return (String) objectValue;
+        } else {
+            return null;
+        }
     }
 }

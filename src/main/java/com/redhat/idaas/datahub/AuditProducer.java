@@ -24,6 +24,9 @@ import org.slf4j.Logger;
 
 import java.util.Map;
 
+/**
+ * FOR TESTING PURPOSES ONLY.
+ */
 @Service
 public class AuditProducer {
 
@@ -36,6 +39,6 @@ public class AuditProducer {
     private ConfigProperties config;
 
     public void sendMessageWithHeaders(String message, Map<String, Object> headers) {
-        producerTemplate.sendBodyAndHeaders("kafka:opsmgmt_transactions?brokers=" + config.getKafkaBrokers(), message, headers);
+        producerTemplate.sendBodyAndHeaders(config.getKafkaTopicUri(), message, headers);
     }
 }

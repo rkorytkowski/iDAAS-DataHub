@@ -20,10 +20,18 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "idaas")
 public class ConfigProperties {
 
-    //private String kafkaBrokers = "localhost:9092";
     private String kafkaBrokers;
-    //private String auditDir = "audit";
+    private String kafkaTopicName;
+
     private String auditDir;
+
+    private Boolean storeInDb;
+    private String dbDriverClassName;
+    private String dbUrl;
+    private String dbUsername;
+    private String dbPassword;
+    private String dbTableName;
+    private Boolean createDbTable;
 
     public String getKafkaBrokers() {
         return kafkaBrokers;
@@ -31,6 +39,21 @@ public class ConfigProperties {
 
     public void setKafkaBrokers(String kafkaBrokers) {
         this.kafkaBrokers = kafkaBrokers;
+    }
+
+    public String getKafkaTopicName() {
+        return kafkaTopicName;
+    }
+
+    public void setKafkaTopicName(String kafkaTopicName) {
+        this.kafkaTopicName = kafkaTopicName;
+    }
+
+    public String getKafkaTopicUri() {
+        String kafkaURI;
+        kafkaURI = "kafka:" + getKafkaTopicName() +
+                "?brokers=" + getKafkaBrokers();
+        return kafkaURI;
     }
 
     public String getAuditDir() {
@@ -41,4 +64,67 @@ public class ConfigProperties {
         this.auditDir = auditDir;
     }
 
+    public boolean isStoreInDb() {
+        return storeInDb != null && storeInDb;
+    }
+
+    public void setStoreInDb(Boolean storeInDb) {
+        this.storeInDb = storeInDb;
+    }
+
+    public Boolean getStoreInDb() {
+        return storeInDb;
+    }
+
+    public boolean isCreateDbTable() {
+        return createDbTable != null && createDbTable;
+    }
+
+    public Boolean getCreateDbTable() {
+        return createDbTable;
+    }
+
+    public void setCreateDbTable(Boolean createDbTable) {
+        this.createDbTable = createDbTable;
+    }
+
+    public String getDbUrl() {
+        return dbUrl;
+    }
+
+    public void setDbUrl(String dbUrl) {
+        this.dbUrl = dbUrl;
+    }
+
+    public String getDbUsername() {
+        return dbUsername;
+    }
+
+    public void setDbUsername(String dbUsername) {
+        this.dbUsername = dbUsername;
+    }
+
+    public String getDbPassword() {
+        return dbPassword;
+    }
+
+    public void setDbPassword(String dbPassword) {
+        this.dbPassword = dbPassword;
+    }
+
+    public String getDbDriverClassName() {
+        return dbDriverClassName;
+    }
+
+    public void setDbDriverClassName(String dbDriverClassName) {
+        this.dbDriverClassName = dbDriverClassName;
+    }
+
+    public String getDbTableName() {
+        return dbTableName;
+    }
+
+    public void setDbTableName(String dbTableName) {
+        this.dbTableName = dbTableName;
+    }
 }

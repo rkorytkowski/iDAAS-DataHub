@@ -42,6 +42,21 @@ Alternatively, if you have a running instance of Kafka, you can start a solution
 `./platform-scripts/start-solution-with-external-kafka.sh --idaas.kafkaBrokers=host1:port1,host2:port2`.
 The script will startup iDAAS DataHub Service.
 
+Optionally you can configure the service to store audit data in DB. You can run an instance of Postgres db with:
+
+`docker run --rm --name datahub-db -e POSTGRES_PASSWORD=Postgres123 -p 5432:5432 postgres:alpine`
+
+You can enable storing audit in DB by running the service with `--idaas.storeInDb=true` parameter. You can customize 
+default DB connection details by providing the following properties:
+```properties
+idass.dbDriverClassName=org.postgresql.Driver
+idaas.dbUrl=jdbc:postgresql://localhost:5432/audit_db
+idaas.dbUsername=postgres
+idass.dbPassword=Postgres123
+idaas.dbTableName=audit
+idaas.createDbTable=true
+```
+
 It is possible to overwrite configuration by:
 1. Providing parameters via command line e.g.
 `./start-solution.sh --idaas.auditDir=some/other/audit/dir`
@@ -50,14 +65,27 @@ It is possible to overwrite configuration by:
 
 Supported properties include:
 ```properties
-idaas.kafkaBrokers=localhost:9092 #a comma separated list of kafka brokers e.g. host1:port1,host2:port2
-idaas.auditDir=audit
 server.port=8080
+
+idaas.kafkaBrokers=localhost:9092 #a comma separated list of kafka brokers e.g. host1:port1,host2:port2
+idaas.kafkaTopicName=opsmgmt_platformtransactions
+idaas.auditDir=audit
+
+idaas.storeInDb=false
+idass.dbDriverClassName=org.postgresql.Driver
+idaas.dbUrl=jdbc:postgresql://localhost:5432/audit_db
+idaas.dbUsername=postgres
+idass.dbPassword=Postgres123
+ioaas.dbTableName=audit
+idaas.createDbTable=true
 ```
+
+
 
 ### Usage
 
-The service listens for Kafka messages on the `opsmgmt_transactions` queue and outputs them to auditDir as json files.
+The service listens for Kafka messages on the `opsmgmt_platformtransactions` queue by default and outputs them to 
+'audit' dir as json files.
 
 The output includes both message and headers.
 
@@ -66,17 +94,13 @@ it can be customized by providing `--server.port=8082` parameter.
  
 You can POST a message like this:
 ```shell script
-curl -X POST \
-  http://localhost:8080/message \
-  -H 'content-type: application/json' \
-  -d '{
-	"message": "test",
-	"headers": {
-		"processingtype": "data",
-		"appname": "iDAAS-ConnectClinical-IndustryStd",
-		"industrystd": "HL7",
-		"messagetrigger": "ADT"
-	}
+curl --location --request POST 'http://localhost:8080/message' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "auditEntireMessage": "test",
+    "processingtype": "data",
+	"industrystd": "HL7",
+	"messagetrigger": "ADT"
 }'
 ```
 

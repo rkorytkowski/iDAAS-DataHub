@@ -25,6 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * FOR TESTING PURPOSES ONLY.
+ */
 @RestController
 public class AuditController {
 
@@ -36,9 +39,19 @@ public class AuditController {
     @PostMapping("/message")
     public void newMessage(@RequestBody AuditMessage message) {
         Map<String, Object> kafkaHeaders = new HashMap<>();
-        for (Map.Entry<String, String> header : message.getHeaders().entrySet()) {
-            kafkaHeaders.put(header.getKey(), header.getValue());
-        }
+        kafkaHeaders.put("auditEntireMessage", message.getAuditEntireMessage());
+        kafkaHeaders.put("auditdetails", message.getAuditdetails());
+        kafkaHeaders.put("bodyData", message.getBodyData());
+        kafkaHeaders.put("camelID", message.getCamelID());
+        kafkaHeaders.put("component", message.getComponent());
+        kafkaHeaders.put("exchangeID", message.getExchangeID());
+        kafkaHeaders.put("industrystd", message.getIndustrystd());
+        kafkaHeaders.put("internalMsgID", message.getInternalMsgID());
+        kafkaHeaders.put("messageprocesseddate", message.getMessageprocesseddate());
+        kafkaHeaders.put("messageprocessedtime", message.getMessageprocessedtime());
+        kafkaHeaders.put("messagetrigger", message.getMessagetrigger());
+        kafkaHeaders.put("processname", message.getProcessname());
+        kafkaHeaders.put("processingtype", message.getProcessingtype());
 
         producer.sendMessageWithHeaders(message.getAuditEntireMessage(), kafkaHeaders);
     }
